@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oasys.mapper.NoteMapper">
+    <resultMap id="note" type="com.oasys.entity.Note">
+        <id column="nid" property="nid"></id>
+        <result column="title" property="title"></result>
+        <result column="context" property="context"></result>
+        <result column="startdate" property="startdate"></result>
+        <result column="enddate" property="enddate"></result>
+        <result column="length" property="length"></result>
+        <result column="subdate" property="subdate"></result>
+        <result column="estatus" property="estatus"></result>
+        <result column="reldate" property="reldate"></result>
+        <result column="eid" property="eid"></result>
+    </resultMap>
+
+    <select id="selectNote" resultMap="note">
+        select * from note
+        <where>
+           eid = #{eid}
+        <if test="type == 0">
+            and 1=1
+        </if>
+        <if test="type == 1">
+            and estatus = 0
+        </if>
+        <if test="type == 2">
+            and estatus in(1,2,3)
+        </if>
+        </where>
+         limit #{start},#{length}
+    </select>
+
+    <select id="selectNotes" resultMap="note">
+        select * from note where
+        <if test="type == 0">
+            1=1
+        </if>
+            <if test="type == 1">
+                estatus = 0
+            </if>
+            <if test="type == 2">
+                estatus in(1,2,3)
+            </if>
+        limit #{start},#{length}
+    </select>
+
+    <select id="selectCountNote" resultType="java.lang.Integer">
+        select count(*) from note
+        <where>
+            <if test="eid != null">
+               and eid = #{eid}
+            </if>
+            <if test="type==1">
+                and estatus = 0
+            </if>
+            <if test="type==2">
+                and estatus in (1,2,3)
+            </if>
+        </where>
+    </select>
+
+    <insert id="addNote">
+        insert into note values (null,#{title},#{context},#{startdate},#{enddate},#{length},now(),0,null,#{eid})
+    </insert>
+
+    <select id="selectLeave" resultMap="note">
+        select * from note where eid = #{eid}
+    </select>
+
+    <update id="updateNote">
+        update note set estatus = #{estatus} where nid = #{nid}
+    </update>
+
+    <select id="selectNoteLeave" resultMap="note">
+        select * from note where nid = #{nid}
+    </select>
+
+    <update id="updateNoteLeave">
+        update note set title = #{title},context = #{context},startdate = #{startdate},enddate = #{enddate},length = #{length},estatus = 0 where nid = #{nid}
+    </update>
+
+    <update id="updateAndLogin">
+        update employee set epass = #{epass} where eid = #{eid}
+    </update>
+</mapper>

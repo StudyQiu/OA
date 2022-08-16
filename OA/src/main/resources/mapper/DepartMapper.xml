@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oasys.mapper.DepartMapper">
+    <resultMap id="depart" type="com.oasys.entity.Depart">
+        <id column="did" property="did"></id>
+        <result column="dname" property="dname"></result>
+        <result column="duty" property="duty"></result>
+        <result column="credate" property="credate"></result>
+        <result column="dstatus" property="dstatus"></result>
+    </resultMap>
+
+    <select id="selectAllDepart" resultMap="depart">
+        select * from depart where dstatus = #{dstatus}
+    </select>
+
+    <select id="selectDeptDid" resultMap="depart">
+        select * from depart where did = #{did}
+    </select>
+
+    <update id="deleteDepart">
+        update depart set
+        <if test="dstatus == 0">
+            dstatus=1
+        </if>
+        <if test="dstatus == 1">
+            dstatus=0
+        </if>
+        where did = #{did}
+    </update>
+
+    <update id="editDept">
+        update depart set dname = #{dname},duty = #{duty} where did = #{did}
+    </update>
+
+    <insert id="addDept" parameterType="com.oasys.entity.Depart">
+        insert into depart values (null,#{dname},#{duty},now(),0)
+    </insert>
+
+</mapper>

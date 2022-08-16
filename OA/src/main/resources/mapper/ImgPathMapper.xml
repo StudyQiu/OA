@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oasys.mapper.ImgPathMapper">
+    <resultMap id="img" type="com.oasys.entity.ImgPath">
+        <id column="eid" property="eid"></id>
+        <result column="imgpath" property="imgpath"></result>
+    </resultMap>
+
+    <select id="queryById" resultMap="img">
+        select * from imgpath where eid = #{eid}
+    </select>
+
+    <update id="updImgPath">
+        update imgpath set imgPath = #{imgPath} where eid = #{eid}
+    </update>
+</mapper>

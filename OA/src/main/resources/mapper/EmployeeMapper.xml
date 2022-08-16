@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oasys.mapper.EmployeeMapper">
+    <resultMap id="employ" type="com.oasys.entity.Employee">
+        <id column="eid" property="eid"></id>
+        <result column="ename" property="ename"></result>
+        <result column="epass" property="epass"></result>
+        <result column="realname" property="realname"></result>
+        <result column="esex" property="esex"></result>
+        <result column="entrydate" property="entrydate"></result>
+        <result column="leavedate" property="leavedate"></result>
+        <result column="position" property="position"></result>
+        <result column="sal" property="sal"></result>
+        <result column="estatus" property="estatus"></result>
+        <result column="did" property="did"></result>
+    </resultMap>
+
+    <select id="selectAll" resultMap="employ" parameterType="com.oasys.entity.Employee">
+        select * from employee
+        <where>
+            <if test="ename != null and ename != ''">
+                and ename = #{ename}
+            </if>
+            <if test="epass != null and epass != ''">
+                and epass = #{epass}
+            </if>
+        </where>
+    </select>
+
+    <select id="login" resultMap="employ">
+        select * from employee where ename = #{ename}
+    </select>
+
+    <select id="isLogin" resultMap="employ">
+        select * from employee where ename = #{ename} and epass=#{epass}
+    </select>
+
+    <select id="selectEmpByPage" resultMap="employ">
+        select * from employee where estatus = #{estatus}
+         <if test="realname != null and realname != ''">
+             and realname like concat('%',#{realname},'%')
+         </if>
+        limit #{start},#{length}
+    </select>
+
+    <select id="selectCountByPage" resultType="java.lang.Integer">
+        select count(*) from employee where estatus = #{estatus}
+        <if test="realname != null and realname != ''">
+            and realname like concat('%',#{realname},'%')
+        </if>
+    </select>
+
+    <insert id="addEmp" parameterType="com.oasys.entity.Employee">
+        insert into employee values (null,#{ename},'123456',#{realname},#{esex},now(),null,#{position},#{sal},0,#{did})
+    </insert>
+    
+    <update id="editEmp">
+        update employee set ename=#{ename},epass=#{epass},realname=#{realname},esex=#{esex},sal=#{sal},position=#{position},did=#{did} where eid = #{eid}
+    </update>
+
+    <select id="selectQuery" resultMap="employ">
+        select * from employee where eid = #{eid}
+    </select>
+
+    <update id="deleteEmp">
+        update employee set
+        <if test="estatus == 0">
+            estatus=1
+        </if>
+        <if test="estatus == 1">
+            estatus=0
+        </if>
+        where eid = #{eid}
+    </update>
+
+</mapper>
